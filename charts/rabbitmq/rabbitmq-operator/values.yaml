@@ -1,0 +1,16 @@
+kubernetesClusterDomain: cluster.local
+operator:
+  operator:
+    image:
+      repository: rabbitmqoperator/cluster-operator
+      tag: 2.5.0
+    resources:
+      limits:
+        cpu: 200m
+        memory: 500Mi
+      requests:
+        cpu: 200m
+        memory: 500Mi
+  replicas: 1
+  serviceAccount:
+    annotations: {}

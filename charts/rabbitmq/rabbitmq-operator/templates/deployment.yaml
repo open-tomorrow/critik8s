@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-operator
+  labels:
+    app.kubernetes.io/component: rabbitmq-operator
+    app.kubernetes.io/part-of: rabbitmq
+  {{- include "rabbitmq-operator.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.operator.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rabbitmq-cluster-operator
+    {{- include "rabbitmq-operator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: rabbitmq-operator
+        app.kubernetes.io/name: rabbitmq-cluster-operator
+        app.kubernetes.io/part-of: rabbitmq
+      {{- include "rabbitmq-operator.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - command:
+        - /manager
+        env:
+        - name: OPERATOR_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.operator.operator.image.repository }}:{{ .Values.operator.operator.image.tag
+          | default .Chart.AppVersion }}
+        name: operator
+        ports:
+        - containerPort: 9782
+          name: metrics
+          protocol: TCP
+        resources: {{- toYaml .Values.operator.operator.resources | nindent 10 }}
+      serviceAccountName: rabbitmq-operator
+      terminationGracePeriodSeconds: 10
