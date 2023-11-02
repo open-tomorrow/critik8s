@@ -7,6 +7,7 @@ repos:
       exclude: ^charts.*.yaml$
     - id: check-added-large-files
     - id: end-of-file-fixer
+      exclude: ^(assets.*|design.*)$
     - id: debug-statements
     - id: mixed-line-ending
     - id: detect-private-key
@@ -21,7 +22,8 @@ repos:
       exclude: >-
         (?x)(
           src/monitor/src/assets/.*|
-          src/monitor/public/.*
+          src/monitor/public/.*|
+          assets/.*
         )$
     - id: git-check
 
