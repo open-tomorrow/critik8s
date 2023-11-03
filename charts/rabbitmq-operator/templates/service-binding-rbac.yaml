@@ -1,0 +1,19 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "rabbitmq-operator.fullname" . }}-service-binding-role
+  labels:
+    app.kubernetes.io/component: rabbitmq-operator
+    app.kubernetes.io/part-of: rabbitmq
+    servicebinding.io/controller: "true"
+  {{- include "rabbitmq-operator.labels" . | nindent 4 }}
+rules:
+
+- apiGroups:
+  - rabbitmq.com
+  resources:
+  - rabbitmqclusters
+  verbs:
+  - get
+  - list
+  - watch

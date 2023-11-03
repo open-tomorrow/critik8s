@@ -1,0 +1,14 @@
+kubernetesClusterDomain: cluster.local
+cluster:
+  replicas: 1
+  resources:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 1
+    memory: 2Gi
+rabbitmq:
+  config:
+    logLevel: info
+    username: admin
+    password: password
