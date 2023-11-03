@@ -8,8 +8,9 @@ critik8s aims to report critical error events that occur in Kubernetes clusters 
 it will signals RWO pods failures, in his first version.
 
 The main features of the implementation should be modularity and reactivity.
- - Modularity is the key to extend the project and add functionalities for different scenarios.
- - Reactivity because we want to offer strong performance and user experiense on the frontend side.
+
+- Modularity is the key to extend the project and add functionalities for different scenarios.
+- Reactivity because we want to offer strong performance and user experiense on the frontend side.
 
 ## Considered Options
 
