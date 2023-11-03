@@ -28,3 +28,6 @@
 # System files
 .DS_Store
 Thumbs.db
+
+#other
+tmp
