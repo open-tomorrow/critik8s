@@ -5,7 +5,7 @@ Our goal is to create a project that offers us the opportunity to improve our fr
 ## Context and Problem Statement
 
 critik8s aims to report critical error events that occur in Kubernetes clusters and therefore require manual user intervention.
-it will signals RWO pods failures, in his first version. 
+it will signals RWO pods failures, in his first version.
 
 The main features of the implementation should be modularity and reactivity.
  - Modularity is the key to extend the project and add functionalities for different scenarios.
