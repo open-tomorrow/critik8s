@@ -8,6 +8,7 @@ metadata:
     servicebinding.io/controller: "true"
   {{- include "rabbitmq-operator.labels" . | nindent 4 }}
 rules:
+
 - apiGroups:
   - rabbitmq.com
   resources:
