@@ -1,0 +1,23 @@
+{
+  "name": "critik8s",
+  "version": "1.0.0",
+  "description": "monitoring tool for k8s",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint:md": "markdownlint-cli2 --fix **/*.md",
+    "generate:models": "echo generate models and API interface"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/open-tomorrow/critik8s.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/open-tomorrow/critik8s/issues"
+  },
+  "homepage": "https://github.com/open-tomorrow/critik8s#readme",
+  "devDependencies": {
+    "markdownlint-cli2": "^0.10.0"
+  }
+}
