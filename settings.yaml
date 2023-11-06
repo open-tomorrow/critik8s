@@ -1,0 +1,4 @@
+settings:
+  rabbitmq:
+    username: admin
+    password: password

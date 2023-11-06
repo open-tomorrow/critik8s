@@ -10,5 +10,3 @@ cluster:
 rabbitmq:
   config:
     logLevel: info
-    username: admin
-    password: password

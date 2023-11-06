@@ -17,8 +17,8 @@ spec:
     additionalConfig: |
       log.console.level = {{ .Values.rabbitmq.config.logLevel }}
       channel_max = 700
-      default_user= {{ .Values.rabbitmq.config.username }}
-      default_pass = {{ .Values.rabbitmq.config.password }}
+      default_user= {{ .Values.settings.rabbitmq.username }}
+      default_pass = {{ .Values.settings.rabbitmq.password }}
       default_user_tags.administrator = true
   service:
     type: LoadBalancer
