@@ -7,7 +7,7 @@ This directory contains helm charts to install `critik8s`.
 This chart will install the RabbitMq operator to deploy and manage RabbitMQ clusters. See <https://github.com/rabbitmq/cluster-operator>
 
   ```bash
-  helm install rabbitmq-operator charts/rabbitmq-operator/ -n critik8s --create-namespace
+  helm install rabbitmq-operator charts/rabbitmq-operator/ -n rabbitmq --create-namespace
   ```
 
 ## RabbitMq Cluster
@@ -15,7 +15,7 @@ This chart will install the RabbitMq operator to deploy and manage RabbitMQ clus
 This chart will install the RabbitMq Custer, which provides the messaging services inside your cluster.
 
   ```bash
-  helm install rabbitmq-cluster charts/rabbitmq-cluster/ --values settings.yaml -n critik8s --create-namespace
+  helm install rabbitmq-cluster charts/rabbitmq-cluster/ --values settings.yaml -n rabbitmq --create-namespace
   ```
 
 ## Test RabbitMq Cluster
