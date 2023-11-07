@@ -27,3 +27,12 @@ k3d-delete:
 
 gen-model-apis:
 	@./scripts/gen-model-api.sh
+
+########################################################################
+# Monitor UI
+
+monitor-ui-install:
+	cd src/monitor && npm install
+
+monitor-ui-start:
+	cd src/monitor && npm run dev
