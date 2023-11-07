@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright © 2023 OpenTomorrow
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -9,21 +10,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-########################################################################
-# k3d cluster
-
-k3d-start:
-	@./scripts/k3d-create.sh
-	k3d kubeconfig merge -ad
-	kubectl config use-context k3d-critik8s
-	@./scripts/k3d-prepare.sh
-
-k3d-delete:
-	k3d cluster delete critik8s
-	@if test -f /usr/local/bin/rke2-uninstall.sh; then sudo sh /usr/local/bin/rke2-uninstall.sh; fi
-
-########################################################################
-# API Generator
-
-gen-model-apis:
-	@./scripts/gen-model-api.sh
+asyncapi generate fromTemplate model/asyncapi_ui_critical.yaml @asyncapi/nodejs-template -o outputCritic -p server=rabbitmq
+asyncapi generate fromTemplate model/asyncapi_ui_node.yaml @asyncapi/nodejs-template -o outputNode -p server=rabbitmq
