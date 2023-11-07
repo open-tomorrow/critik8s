@@ -1,0 +1,49 @@
+asyncapi: 2.5.0
+info:
+  title: Pusher Critical Service
+  version: 0.0.1
+  description: |
+    Emits critical events
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+  rabbitmq:
+    url: amqp://rabbitmq-cluster.rabbitmq.svc.cluster.local
+    protocol: amqp
+channels:
+  critik8s/critical:
+    subscribe:
+      summary: Emits a new critical event
+      operationId: emitCritical
+      message:
+        name: Critical
+        payload:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Id of the Critical.
+            ruleId:
+              type: string
+              description: Rule Id (external key).
+            nodeIdList:
+              type: array
+              items:
+                type: string
+              description: Node Id list (external keys).
+            tagIdList:
+              type: array
+              items:
+                type: string
+              description: Tag Id list (external keys).
+            severity:
+              type: integer
+              description: Severity.
+            creationTime:
+              type: string
+              format: date-time
+              description: The time when this event has been created.
+            message:
+              type: string
+              description: The message associated to this event.

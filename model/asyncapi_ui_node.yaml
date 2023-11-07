@@ -1,0 +1,29 @@
+asyncapi: 2.5.0
+info:
+  title: UI Node Service
+  version: 0.0.1
+  description: |
+    Receives nodes
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+  rabbitmq:
+    url: amqp://rabbitmq-cluster.rabbitmq.svc.cluster.local
+    protocol: amqp
+channels:
+  critik8s/node:
+    publish:
+      summary: Informs about a node
+      operationId: onNode
+      message:
+        name: Node
+        payload:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Id of the Node.
+            status:
+              type: string
+              description: Status of the Node.

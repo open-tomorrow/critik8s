@@ -1,6 +1,8 @@
 # critik8s
 
-monitoring tool for k8s
+critik8s is a monitoring/alert tool for Kubernetes.
+
+You decide which events will be reported as critical within your cluster.
 
 ## k3d setup
 
@@ -10,7 +12,6 @@ monitoring tool for k8s
 - Helm
 - k3d
 - kubectl
-- Go (1.20+)
 
 ## Create the cluster
 
