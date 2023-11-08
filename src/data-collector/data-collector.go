@@ -22,9 +22,9 @@ func main() {
 	service := os.Getenv("RABBITMQ_CLUSTER_SERVICE_HOST")
 	port := os.Getenv("RABBITMQ_CLUSTER_SERVICE_PORT")
 
-	username := os.Getenv("rmq_username")
-	password := os.Getenv("rmq_password")
-	routingKey := os.Getenv("rmq_routing_key")
+	username := os.Getenv("RMQ_USERNAME")
+	password := os.Getenv("RMQ_PASSWORD")
+	monitorRoutingKey := os.Getenv("ROUTE_1")
 
 	address := fmt.Sprintf("amqp://%s:%s@%s:%s/", username, password, service, port)
 
@@ -54,10 +54,10 @@ func main() {
 
 	for {
 		err = ch.PublishWithContext(ctx,
-			"logs_topic", // exchange
-			routingKey,   // routing key
-			false,        // mandatory
-			false,        // immediate
+			"logs_topic",      // exchange
+			monitorRoutingKey, // routing key for monitor, TO BE REMOVED, ONLY FOR TESTS
+			false,             // mandatory
+			false,             // immediate
 			amqp.Publishing{
 				ContentType: "text/plain",
 				Body:        []byte(body),

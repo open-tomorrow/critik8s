@@ -5,6 +5,8 @@ metadata:
   labels:
   {{- include "monitor-backend.labels" . | nindent 4 }}
 data:
-  rmq_username: {{ .Values.settings.rabbitmq.username }}
-  rmq_password: {{ .Values.settings.rabbitmq.password }}
-  rmq_relay: {{ .Values.settings.amqpProxy.path }}
+  RMQ_USERNAME: {{ .Values.settings.rabbitmq.username }}
+  RMQ_PASSWORD: {{ .Values.settings.rabbitmq.password }}
+  AMQ_PROXY_PATH: {{ .Values.settings.amqpProxy.path }}
+  ROUTE_1: {{ .Values.settings.rabbitmq.routing.key1 }}
+  ROUTE_2: {{ .Values.settings.rabbitmq.routing.key2 }}
