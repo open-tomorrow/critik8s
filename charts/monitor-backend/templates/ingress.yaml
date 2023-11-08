@@ -1,0 +1,31 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-prefix
+  labels:
+  {{- include "monitor-backend.labels" . | nindent 4 }}
+spec:
+  stripPrefix:
+    prefixes:
+    - /api
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: monitor-backend
+  labels:
+  {{- include "monitor-backend.labels" . | nindent 4 }}
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-strip-prefix@kubernetescrd
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: 'monitor-backend'
+            port:
+              number: 8081
+        path: /api/
+        pathType: Prefix

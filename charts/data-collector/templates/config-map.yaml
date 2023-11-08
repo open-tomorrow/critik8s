@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  rmq_username: {{ .Values.settings.rabbitmq.username }}
+  rmq_password: {{ .Values.settings.rabbitmq.password }}
+  rmq_routing_key: {{ .Values.settings.rabbitmq.routingKey }}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: data-collector

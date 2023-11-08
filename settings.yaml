@@ -1,4 +1,7 @@
 settings:
   rabbitmq:
+    routingKey: pippo
     username: admin
     password: password
+  amqpProxy:
+    path: amqp-proxy

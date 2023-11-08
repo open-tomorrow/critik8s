@@ -18,6 +18,22 @@ This chart will install the RabbitMq Custer, which provides the messaging servic
   helm install rabbitmq-cluster charts/rabbitmq-cluster/ --values settings.yaml -n critik8s --create-namespace
   ```
 
+## Monitor Backend
+
+This chart will install the monitor backend, which provides a rest api for the monitor ui.
+
+  ```bash
+  helm install monitor-backend charts/monitor-backend/ --values settings.yaml -n critik8s
+  ```
+
+## Data collector
+
+This chart will install the data collector, which provides Kubernetes data to the rule engine.
+
+  ```bash
+  helm install data-collector charts/data-collector/ --values settings.yaml -n critik8s
+  ```
+
 ## Test RabbitMq Cluster
 
 - Wait until the RabbitMq cluster is `ready`.
@@ -29,9 +45,9 @@ This chart will install the RabbitMq Custer, which provides the messaging servic
 - Run `perf-test` pod
 
     ```bash
-    username="$(kubectl -n rabbitmq get secret rabbitmq-cluster-default-user -o jsonpath='{.data.username}' | base64 --decode)"
-    password="$(kubectl -n rabbitmq get secret rabbitmq-cluster-default-user -o jsonpath='{.data.password}' | base64 --decode)"
-    service="$(kubectl -n rabbitmq get service rabbitmq-cluster -o jsonpath='{.spec.clusterIP}')"
+    username="$(kubectl -n critik8s get secret rabbitmq-cluster-default-user -o jsonpath='{.data.username}' | base64 --decode)"
+    password="$(kubectl -n critik8s get secret rabbitmq-cluster-default-user -o jsonpath='{.data.password}' | base64 --decode)"
+    service="$(kubectl -n critik8s get service rabbitmq-cluster -o jsonpath='{.spec.clusterIP}')"
     kubectl -n rabbitmq run perf-test --image=pivotalrabbitmq/perf-test -- --uri amqp://$username:$password@$service
     ```
 

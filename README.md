@@ -35,3 +35,42 @@ make k3d-start AGENT_NODES=2
 ```shell
 make k3d-delete
 ```
+
+## Node setup
+
+### Requirements
+
+- Node
+- Helm
+- k3d
+- kubectl
+
+## Install Node dependencies
+
+```shell
+npm install
+```
+
+## Create the cluster
+
+Create a new cluster; wait until traefik and other cluster service are up & running:
+
+```shell
+npm run cluster:create
+```
+
+## Deploy rabbitmq server
+
+Deploy rabbitmq operator and cluster; wait until rabbitmq is up & running
+
+```shell
+npm run critik8s:create:ns && npm run rabbitmq:install
+```
+
+## Deploy critik8s
+
+Deploy critik8s components:
+
+```shell
+npm run critik8s:install
+```
