@@ -20,18 +20,6 @@ prepare_system_domain
 
 echo "Preparing k3d environment ..."
 
-#Install the cert-manager
-set +e
-kubectl create namespace cert-manager
-helm repo add jetstack https://charts.jetstack.io
-helm repo update
-helm install cert-manager --namespace cert-manager jetstack/cert-manager \
-    --set installCRDs=true \
-    --set extraArgs[0]=--enable-certificate-owner-ref=true \
-    --version 1.10 \
-    --wait
-set -e
-
 #Install rabbitmq operator
 set +e
 helm install rabbitmq-operator charts/rabbitmq-operator -n rabbitmq --create-namespace --wait
@@ -39,7 +27,7 @@ set -e
 
 #Install rabbitmq cluster
 set +e
-helm install rabbitmq-cluster charts/rabbitmq-cluster -n rabbitmq --create-namespace --wait
+helm install rabbitmq-cluster charts/rabbitmq-cluster --values settings.yaml -n rabbitmq --create-namespace --wait
 set -e
 
 echo
