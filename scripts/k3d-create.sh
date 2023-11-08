@@ -40,22 +40,13 @@ echo "Ensuring a network ..."
 docker network create $NETWORK_NAME || echo "Network already exists"
 
 echo "Creating a new one named $CLUSTER_NAME"
-if [ -z ${EXPOSE_CLUSTER_PORTS+x} ]; then
-  # Without exposing ports on the host:
-  k3d cluster create $CLUSTER_NAME \
-    -v /dev/mapper:/dev/mapper \
-    --network $NETWORK_NAME \
-    --agents $AGENT_NODES \
-    --image "$K3S_IMAGE"
-else
-  # Exposing ports on the host:
-  k3d cluster create $CLUSTER_NAME \
-    -v /dev/mapper:/dev/mapper \
-    --network $NETWORK_NAME \
-    --agents $AGENT_NODES \
-    --image "$K3S_IMAGE" \
-    -p '80:80@server:0' -p '443:443@server:0'
-fi
+k3d cluster create $CLUSTER_NAME \
+  -v /dev/mapper:/dev/mapper \
+  --network $NETWORK_NAME \
+  --agents $AGENT_NODES \
+  --image "$K3S_IMAGE" \
+  -p '80:80@server:0' -p '443:443@server:0'
+
 k3d kubeconfig get $CLUSTER_NAME > $KUBECONFIG
 
 echo "Waiting for node to be ready ..."
