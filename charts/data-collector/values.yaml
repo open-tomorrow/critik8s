@@ -2,7 +2,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/torchiaf/critik8s/data-collector
+  repository: ghcr.io/open-tomorrow/critik8s/data-collector
   pullPolicy: IfNotPresent
   tag: "latest"
 

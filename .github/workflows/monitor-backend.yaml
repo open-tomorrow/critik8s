@@ -3,7 +3,7 @@ name: Create and publish a Docker image of monitor-backend
 on:
   push:
     branches:
-    - micro-services
+    - main
 
 defaults:
   run:
