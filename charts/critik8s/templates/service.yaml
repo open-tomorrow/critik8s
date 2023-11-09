@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-collector
+  labels:
+    {{- include "data-collector.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.dataCollector.service.type }}
+  ports:
+    - port: {{ .Values.dataCollector.service.port }}
+      targetPort: rmq-emit
+      protocol: TCP
+      name: go-emit-port
+  selector:
+    {{- include "data-collector.selectorLabels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: monitor-backend
+  labels:
+    app: monitor-backend
+  {{- include "monitor-backend.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.monitorBackend.type }}
+  selector:
+    app: monitor-backend
+  {{- include "monitor-backend.selectorLabels" . | nindent 4 }}
+  ports:
+	{{- .Values.monitorBackend.ports | toYaml | nindent 2 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: amqp-proxy
+  labels:
+    app: amqp-proxy
+  {{- include "amqp-proxy.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.amqpProxy.type }}
+  selector:
+    app: amqp-proxy
+  {{- include "amqp-proxy.selectorLabels" . | nindent 4 }}
+  ports:
+	{{- .Values.amqpProxy.ports | toYaml | nindent 2 }}
