@@ -1,0 +1,15 @@
+amqpProxy:
+  amqpProxy:
+    args:
+    - --upstream
+    - tcp://$(RABBITMQ_CLUSTER_SERVICE_HOST):$(RABBITMQ_CLUSTER_SERVICE_PORT)
+    image:
+      repository: cloudamqp/websocket-tcp-relay
+      tag: latest
+  ports:
+  - port: 15670
+    protocol: TCP
+    targetPort: 15670
+  replicas: 1
+  type: ClusterIP
+kubernetesClusterDomain: cluster.local

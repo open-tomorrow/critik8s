@@ -2,3 +2,12 @@ settings:
   rabbitmq:
     username: admin
     password: password
+    routing:
+      # monitor <-> data-collector TO BE REMOVED, ONLY FOR TESTS
+      key1: vDsJNl
+      # monitor-backend <-> rule-evaluator
+      key2: DZC8yP
+      # data-collector <-> rule-evaluator
+      key3: kxMjFs
+  amqpProxy:
+    path: amqp-proxy

@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "amqp-proxy.fullname" . }}-amqp-proxy
+  labels:
+  {{- include "amqp-proxy.labels" . | nindent 4 }}
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: amqp-proxy
+            port:
+              number: 15670
+        path: /amqp-proxy
+        pathType: Prefix

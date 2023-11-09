@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: monitor-backend
+  labels:
+  {{- include "monitor-backend.labels" . | nindent 4 }}
+data:
+  RMQ_USERNAME: {{ .Values.settings.rabbitmq.username }}
+  RMQ_PASSWORD: {{ .Values.settings.rabbitmq.password }}
+  AMQ_PROXY_PATH: {{ .Values.settings.amqpProxy.path }}
+  ROUTE_1: {{ .Values.settings.rabbitmq.routing.key1 }}
+  ROUTE_2: {{ .Values.settings.rabbitmq.routing.key2 }}

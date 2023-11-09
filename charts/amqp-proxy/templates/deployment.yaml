@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: amqp-proxy
+  labels:
+    app: amqp-proxy
+  {{- include "amqp-proxy.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.amqpProxy.replicas }}
+  selector:
+    matchLabels:
+      app: amqp-proxy
+    {{- include "amqp-proxy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: amqp-proxy
+      {{- include "amqp-proxy.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - args: {{- toYaml .Values.amqpProxy.amqpProxy.args | nindent 8 }}
+        env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.amqpProxy.amqpProxy.image.repository }}:{{ .Values.amqpProxy.amqpProxy.image.tag
+          | default .Chart.AppVersion }}
+        name: amqp-proxy
+        resources: {}

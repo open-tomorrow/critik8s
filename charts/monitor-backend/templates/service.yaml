@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: monitor-backend
+  labels:
+    app: monitor-backend
+  {{- include "monitor-backend.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.monitorBackend.type }}
+  selector:
+    app: monitor-backend
+  {{- include "monitor-backend.selectorLabels" . | nindent 4 }}
+  ports:
+	{{- .Values.monitorBackend.ports | toYaml | nindent 2 -}}
