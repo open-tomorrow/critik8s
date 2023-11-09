@@ -1,0 +1,118 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: amqp-proxy
+  labels:
+    app: amqp-proxy
+  {{- include "amqp-proxy.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.amqpProxy.replicas }}
+  selector:
+    matchLabels:
+      app: amqp-proxy
+    {{- include "amqp-proxy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: amqp-proxy
+      {{- include "amqp-proxy.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - args: {{- toYaml .Values.amqpProxy.amqpProxy.args | nindent 8 }}
+        env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.amqpProxy.amqpProxy.image.repository }}:{{ .Values.amqpProxy.amqpProxy.image.tag
+          | default .Chart.AppVersion }}
+        name: amqp-proxy
+        resources: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-collector
+  labels:
+    {{- include "data-collector.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.dataCollector.autoscaling.enabled }}
+  replicas: {{ .Values.dataCollector.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "data-collector.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.dataCollector.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "data-collector.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.dataCollector.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "data-collector.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.dataCollector.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.dataCollector.securityContext | nindent 12 }}
+          image: "{{ .Values.dataCollector.image.repository }}:{{ .Values.dataCollector.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.dataCollector.image.pullPolicy }}
+          envFrom:
+          - configMapRef:
+              name: data-collector
+          ports:
+            - name: rmq-emit
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.dataCollector.resources | nindent 12 }}
+      {{- with .Values.dataCollector.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.dataCollector.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.dataCollector.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitor-backend
+  labels:
+    app: monitor-backend
+  {{- include "monitor-backend.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.monitorBackend.replicas }}
+  selector:
+    matchLabels:
+      app: monitor-backend
+    {{- include "monitor-backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: monitor-backend
+      {{- include "monitor-backend.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: PORT
+          value: {{ quote .Values.monitorBackend.monitorBackend.env.port }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        envFrom:
+        - configMapRef:
+            name: monitor-backend
+        image: {{ .Values.monitorBackend.monitorBackend.image.repository }}:{{ .Values.monitorBackend.monitorBackend.image.tag
+          | default .Chart.AppVersion }}
+        name: monitor-backend
+        resources: {}

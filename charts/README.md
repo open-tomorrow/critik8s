@@ -18,22 +18,6 @@ This chart will install the RabbitMq Custer, which provides the messaging servic
   helm install rabbitmq-cluster charts/rabbitmq-cluster/ --values settings.yaml -n critik8s --create-namespace
   ```
 
-## Monitor Backend
-
-This chart will install the monitor backend, which provides a rest api for the monitor ui.
-
-  ```bash
-  helm install monitor-backend charts/monitor-backend/ --values settings.yaml -n critik8s
-  ```
-
-## Data collector
-
-This chart will install the data collector, which provides Kubernetes data to the rule engine.
-
-  ```bash
-  helm install data-collector charts/data-collector/ --values settings.yaml -n critik8s
-  ```
-
 ## Test RabbitMq Cluster
 
 - Wait until the RabbitMq cluster is `ready`.
