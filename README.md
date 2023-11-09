@@ -51,7 +51,7 @@ make k3d-delete
 npm install
 ```
 
-## Create the cluster
+## Create the k3d cluster
 
 Create a new cluster; wait until traefik and other cluster service are up & running:
 

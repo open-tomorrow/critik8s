@@ -7,4 +7,3 @@ data:
   RMQ_PASSWORD: {{ .Values.settings.rabbitmq.password }}
   ROUTE_1: {{ .Values.settings.rabbitmq.routing.key1 }}
   ROUTE_3: {{ .Values.settings.rabbitmq.routing.key3 }}
-
