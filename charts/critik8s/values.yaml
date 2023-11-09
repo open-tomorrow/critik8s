@@ -17,15 +17,11 @@ dataCollector:
   replicaCount: 1
   image:
     repository: ghcr.io/open-tomorrow/critik8s/data-collector
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
     tag: "latest"
   imagePullSecrets: []
   nameOverride: ""
   fullnameOverride: ""
-  serviceAccount:
-    create: false
-    annotations: {}
-    name: ""
   podAnnotations: {}
   podSecurityContext: {}
   # fsGroup: 2000

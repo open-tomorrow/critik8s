@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -28,6 +29,10 @@ func main() {
 
 	address := fmt.Sprintf("amqp://%s:%s@%s:%s/", username, password, service, port)
 
+	clientset := initKubeconfig()
+
+	nodes := getNodes(clientset)
+
 	conn, err := amqp.Dial(address)
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
@@ -50,7 +55,11 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	body := "ciao"
+	body, err := json.Marshal(nodes)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	for {
 		err = ch.PublishWithContext(ctx,
@@ -60,11 +69,11 @@ func main() {
 			false,             // immediate
 			amqp.Publishing{
 				ContentType: "text/plain",
-				Body:        []byte(body),
+				Body:        []byte(string(body)),
 			})
 		failOnError(err, "Failed to publish a message")
 
-		log.Printf(" [x] Sent %s", body)
+		log.Printf(" [x] Sent nodes")
 		time.Sleep(5 * time.Second)
 	}
 }
