@@ -53,13 +53,8 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "data-collector.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.dataCollector.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.dataCollector.securityContext | nindent 12 }}
           image: "{{ .Values.dataCollector.image.repository }}:{{ .Values.dataCollector.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.dataCollector.image.pullPolicy }}
           envFrom:
@@ -73,14 +68,6 @@ spec:
             {{- toYaml .Values.dataCollector.resources | nindent 12 }}
       {{- with .Values.dataCollector.nodeSelector }}
       nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.dataCollector.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.dataCollector.tolerations }}
-      tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 ---
