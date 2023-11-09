@@ -3,5 +3,4 @@ go 1.21.3
 use (
   ./monitor-backend
   ./data-collector
-  ./test-receive
 )
