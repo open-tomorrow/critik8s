@@ -1,0 +1,71 @@
+###############################################################################
+# RWO rule
+#
+# The rule emits a critic when a Node fails and the failed node
+# was running Pod(s) with attached RWO PVC(s).
+#
+###############################################################################
+# Subscripts allowed
+#
+# - { path }
+#
+# Use `{ ... }` subscript to specify an absolute path in the rule yaml.
+#
+# Examples:
+#   - { ruleSteps[0].resource }
+#
+# - {{ path }}
+#
+# Use `{{ ... }}` subscript to specify a path in the input yaml.
+#
+# - {{ path }}  denotes an absolute path
+# - {{ .path }} denotes a relative path when there is an opened context
+#
+# - [[ key ]]
+#
+# Use `[[ ... ]]` subscript to specify a key in the temporary storage.
+#
+name: RWO
+ruleSteps:
+
+  - name: RWO-Node
+    resource: Node
+    triggerBy:
+      frequency: 10s
+    conditions:
+      # conditions are all AND evaluated (c1 && c2 && ...)
+      - name: status
+        context: status.conditions
+        moveContextSelectIndexWith:
+          # selectors are all AND evaluated (s1 && s2 && ...)
+          - property: type
+            operator: eq
+            value: Ready
+            context: '.'
+        matches:
+          # matches are all AND evaluated (m1 && m2 && ...)
+          - property: status
+            operator: ne
+            value: "True"
+            context: '.'
+            collectPropertyIfMatch:
+              - property: "{{ .reason }}"
+                withKey: reason
+              - property: "{{ metadata.name }}"
+                withKey: nodeName
+    actions:
+      - emit: warning
+        message: "{ name }-{ ruleSteps[0].resource }:{{ metadata.name }} reason: [[ reason ]]"
+        strategy:
+          cancelIfResolved: true
+      - evaluateStep: RWO-Pod
+
+  - name: RWO-Pod
+    resource: Pod
+    triggerBy:
+      onDemand:
+    conditions:
+      # ...
+    actions:
+      - emit: critic
+        message: "..."
