@@ -27,10 +27,10 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
         run: |
-          docker build . --tag ${{ env.REGISTRY }}/${{ github.actor }}/${{ github.event.repository.name }}/${{ env.IMAGE_NAME }}:latest
-          docker push ${{ env.REGISTRY }}/${{ github.actor }}/${{ github.event.repository.name }}/${{ env.IMAGE_NAME }}:latest
+          docker build . --tag ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.event.repository.name }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.event.repository.name }}/${{ env.IMAGE_NAME }}:latest
