@@ -11,8 +11,8 @@ import (
 	"k8s.io/client-go/util/homedir"
 )
 
-func isRunningInKubernetes() bool {
-	env := os.Getenv("KUBERNETES_SERVICE_HOST")
+func isDevEnv() bool {
+	env := os.Getenv("DEV_ENV")
 	if len(env) > 0 {
 		return true
 	}
@@ -24,13 +24,7 @@ func initKubeconfig() *kubernetes.Clientset {
 	var config *rest.Config
 	var err error
 
-	if isRunningInKubernetes() {
-		// creates the in-cluster config
-		config, err = rest.InClusterConfig()
-		if err != nil {
-			panic(err.Error())
-		}
-	} else {
+	if isDevEnv() {
 		var kubeconfig *string
 		if home := homedir.HomeDir(); home != "" {
 			kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
@@ -42,6 +36,12 @@ func initKubeconfig() *kubernetes.Clientset {
 		config, err = clientcmd.BuildConfigFromFlags("", *kubeconfig)
 		if err != nil {
 			panic(err)
+		}
+	} else {
+		// creates the in-cluster config
+		config, err = rest.InClusterConfig()
+		if err != nil {
+			panic(err.Error())
 		}
 	}
 
