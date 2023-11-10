@@ -9,7 +9,7 @@ type Config struct {
 	DataCollectorRoutingKey string `json:"dataCollectorRoutingKey"` // TO BE REMOVED, ONLY FOR TESTS
 }
 
-func config() Config {
+func getConfig() Config {
 
 	c := Config{
 		RabbitmqPath:            os.Getenv("AMQ_PROXY_PATH"),
