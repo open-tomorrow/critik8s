@@ -3,8 +3,8 @@ kind: ConfigMap
 metadata:
   name: data-collector
 data:
-  RMQ_USERNAME: {{ .Values.settings.rabbitmq.username }}
-  RMQ_PASSWORD: {{ .Values.settings.rabbitmq.password }}
+  AMQP_USERNAME: {{ .Values.settings.rabbitmq.username }}
+  AMQP_PASSWORD: {{ .Values.settings.rabbitmq.password }}
   ROUTE_1: {{ .Values.settings.rabbitmq.routing.key1 }}
   ROUTE_3: {{ .Values.settings.rabbitmq.routing.key3 }}
 ---
@@ -15,8 +15,8 @@ metadata:
   labels:
   {{- include "monitor-backend.labels" . | nindent 4 }}
 data:
-  RMQ_USERNAME: {{ .Values.settings.rabbitmq.username }}
-  RMQ_PASSWORD: {{ .Values.settings.rabbitmq.password }}
-  AMQ_PROXY_PATH: {{ .Values.settings.amqpProxy.path }}
+  AMQP_USERNAME: {{ .Values.settings.rabbitmq.username }}
+  AMQP_PASSWORD: {{ .Values.settings.rabbitmq.password }}
+  AMQP_PROXY_PATH: {{ .Values.settings.amqpProxy.path }}
   ROUTE_1: {{ .Values.settings.rabbitmq.routing.key1 }}
   ROUTE_2: {{ .Values.settings.rabbitmq.routing.key2 }}

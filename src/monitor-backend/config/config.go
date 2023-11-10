@@ -1,4 +1,4 @@
-package main
+package config
 
 import "os"
 
@@ -9,12 +9,12 @@ type Config struct {
 	DataCollectorRoutingKey string `json:"dataCollectorRoutingKey"` // TO BE REMOVED, ONLY FOR TESTS
 }
 
-func getConfig() Config {
+func Get() Config {
 
 	c := Config{
-		RabbitmqPath:            os.Getenv("AMQ_PROXY_PATH"),
-		RabbitmqUsername:        os.Getenv("RMQ_USERNAME"),
-		RabbitmqPassword:        os.Getenv("RMQ_PASSWORD"),
+		RabbitmqPath:            os.Getenv("AMQP_PROXY_PATH"),
+		RabbitmqUsername:        os.Getenv("AMQP_USERNAME"),
+		RabbitmqPassword:        os.Getenv("AMQP_PASSWORD"),
 		DataCollectorRoutingKey: os.Getenv("ROUTE_1"),
 	}
 

@@ -8,9 +8,8 @@ spec:
   type: {{ .Values.dataCollector.service.type }}
   ports:
     - port: {{ .Values.dataCollector.service.port }}
-      targetPort: rmq-emit
+      targetPort: amqp-port
       protocol: TCP
-      name: go-emit-port
   selector:
     {{- include "data-collector.selectorLabels" . | nindent 4 }}
 ---

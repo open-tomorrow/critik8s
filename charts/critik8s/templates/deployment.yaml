@@ -64,7 +64,7 @@ spec:
           - configMapRef:
               name: data-collector
           ports:
-            - name: rmq-emit
+            - name: amqp-port
               containerPort: 8080
               protocol: TCP
           resources:

@@ -1,0 +1,4 @@
+package amqp
+
+func Connect() {
+}
