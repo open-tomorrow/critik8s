@@ -1,3 +1,51 @@
+<script lang="ts" setup>
+  import axios from 'axios'
+  import VueAxios from 'vue-axios'
+  import { AMQPService } from '@/amqp'
+  import NodePanel from './components/MainPanel.vue'
+  import CriticPanel from './components/CriticPanel.vue'
+
+  const links = [
+    'Dashboard',
+  ]
+</script>
+
+<script lang="ts">
+  export default {
+    data: () => ({
+      links: [],
+      nodes: []
+    }),
+
+    methods: {
+    subscribeNodes() {
+
+      axios.get('http://localhost/api/auth').then((response) => {
+
+      const {
+        rabbitmqPath,
+        rabbitmqUsername,
+        rabbitmqPassword,
+        dataCollectorRoutingKey
+      } = response.data;
+
+      let amqpService = new AMQPService("localhost/"+rabbitmqPath,
+                                        "80",
+                                        rabbitmqUsername,
+                                        rabbitmqPassword,
+                                        "logs_topic",
+                                        dataCollectorRoutingKey)
+      amqpService.subscribe()
+      amqpService.messagesSubject.subscribe({
+        next: (v) => (this.nodes as any[]).push(v),
+      });
+    })
+
+    }
+  },
+  }
+</script>
+
 <template>
   <v-app id="inspire">
     <v-app-bar flat>
@@ -26,10 +74,10 @@
 
                 <v-divider class="my-2"></v-divider>
 
-                <v-list-item
+                <v-list-item @click="subscribeNodes"
                   color="grey-lighten-4"
                   link
-                  title="New"
+                  title="Test Sub"
                 ></v-list-item>
               </v-list>
             </v-sheet>
@@ -37,13 +85,13 @@
 
           <v-col>
             <v-sheet min-height="50vh" rounded="lg">
-              <!--  -->
-              Main window
+              <span>{{ nodes }}</span>
+              <node-panel/>
             </v-sheet>
             <v-divider></v-divider>
             <v-sheet min-height="30vh" rounded="lg">
               <!--  -->
-              Critics
+              <critic-panel/>
             </v-sheet>
           </v-col>
 
@@ -52,19 +100,3 @@
     </v-main>
   </v-app>
 </template>
-
-<script setup>
-  const links = [
-    'Dashboard',
-  ]
-</script>
-
-<script>
-  export default {
-    data: () => ({
-      links: [
-        'Dashboard',
-      ],
-    }),
-  }
-</script>
