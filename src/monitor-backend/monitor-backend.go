@@ -5,12 +5,11 @@ import (
 )
 
 func main() {
-	c := config()
 
 	engine := gin.Default()
 	engine.Use(CORSMiddleware())
 
-	routes(engine, c)
+	routes(engine)
 
 	engine.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
