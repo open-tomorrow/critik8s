@@ -29,5 +29,11 @@
   "homepage": "https://github.com/open-tomorrow/critik8s#readme",
   "devDependencies": {
     "markdownlint-cli2": "^0.10.0"
+  },
+  "dependencies": {
+    "@cloudamqp/amqp-client": "^3.1.1",
+    "axios": "^1.6.1",
+    "rxjs": "^7.8.1",
+    "vue-axios": "^3.5.2"
   }
 }

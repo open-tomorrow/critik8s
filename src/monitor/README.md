@@ -12,7 +12,7 @@ npm install
 # pnpm
 pnpm install
 
-# pnpm
+# bun
 bun install
 ```
 
@@ -29,7 +29,7 @@ npm run dev
 pnpm dev
 
 # bun
-bun run dev
+pnpm run dev
 ```
 
 ### Compiles and minifies for production
@@ -45,7 +45,7 @@ npm run build
 pnpm build
 
 # bun
-bun run build
+pnpm run build
 ```
 
 ### Lints and fixes files
@@ -61,7 +61,7 @@ npm run lint
 pnpm lint
 
 # bun
-bun run lint
+pnpm run lint
 ```
 
 ### Customize configuration
