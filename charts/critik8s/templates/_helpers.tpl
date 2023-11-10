@@ -114,17 +114,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
-*/}}
-{{- define "data-collector.serviceAccountName" -}}
-{{- if .Values.dataCollector.serviceAccount.create }}
-{{- default (include "data-collector.fullname" .) .Values.dataCollector.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.dataCollector.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/*
 Expand the name of the chart.
 */}}
 {{- define "monitor-backend.name" -}}

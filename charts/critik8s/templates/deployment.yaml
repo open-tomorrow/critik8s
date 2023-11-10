@@ -53,6 +53,9 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      serviceAccountName: data-collector
+      securityContext:
+        {{- toYaml .Values.dataCollector.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.dataCollector.image.repository }}:{{ .Values.dataCollector.image.tag | default .Chart.AppVersion }}"
