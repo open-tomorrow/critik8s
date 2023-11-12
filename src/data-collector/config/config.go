@@ -16,8 +16,8 @@ type RoutingKeys struct {
 func GetAmqpConfig() AmqpConfig {
 
 	c := AmqpConfig{
-		Service:  os.Getenv("RABBITMQ_CLUSTER_SERVICE_HOST"),
-		Port:     os.Getenv("RABBITMQ_CLUSTER_SERVICE_PORT"),
+		Service:  os.Getenv("AMQP_HOST"),
+		Port:     os.Getenv("AMQP_PORT"),
 		Username: os.Getenv("AMQP_USERNAME"),
 		Password: os.Getenv("AMQP_PASSWORD"),
 	}
