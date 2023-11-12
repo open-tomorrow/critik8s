@@ -10,7 +10,8 @@ type AmqpConfig struct {
 }
 
 type RoutingKeys struct {
-	Monitor string
+	Monitor        string
+	MonitorBackend string
 }
 
 func GetAmqpConfig() AmqpConfig {
@@ -28,7 +29,8 @@ func GetAmqpConfig() AmqpConfig {
 func GetRoutingKeys() RoutingKeys {
 
 	rk := RoutingKeys{
-		Monitor: os.Getenv("ROUTE_1"),
+		Monitor:        os.Getenv("ROUTE_1"),
+		MonitorBackend: os.Getenv("ROUTE_4"),
 	}
 
 	return rk

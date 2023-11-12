@@ -9,7 +9,8 @@ import (
 
 func main() {
 
-	amqp.Connect()
+	conn := amqp.Init()
+	defer conn.Close()
 
 	engine := gin.Default()
 	engine.Use(api.CORSMiddleware())

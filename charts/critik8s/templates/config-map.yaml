@@ -9,6 +9,7 @@ data:
   AMQP_PASSWORD: {{ .Values.settings.rabbitmq.password }}
   ROUTE_1: {{ .Values.settings.rabbitmq.routing.key1 }}
   ROUTE_3: {{ .Values.settings.rabbitmq.routing.key3 }}
+  ROUTE_4: {{ .Values.settings.rabbitmq.routing.key4 }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -24,3 +25,4 @@ data:
   AMQP_PROXY_PATH: {{ .Values.settings.amqpProxy.path }}
   ROUTE_1: {{ .Values.settings.rabbitmq.routing.key1 }}
   ROUTE_2: {{ .Values.settings.rabbitmq.routing.key2 }}
+  ROUTE_4: {{ .Values.settings.rabbitmq.routing.key4 }}
