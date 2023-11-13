@@ -2,6 +2,10 @@ package main
 
 import (
 	"context"
+	amqpClient "data-collector/amqp"
+	"data-collector/config"
+	e "data-collector/error"
+	k8s "data-collector/kubernetes"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -12,33 +16,13 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-func failOnError(err error, msg string) {
-	if err != nil {
-		log.Panicf("%s: %s", msg, err)
-	}
-}
-
 func main() {
 
-	service := os.Getenv("RABBITMQ_CLUSTER_SERVICE_HOST")
-	port := os.Getenv("RABBITMQ_CLUSTER_SERVICE_PORT")
-
-	username := os.Getenv("RMQ_USERNAME")
-	password := os.Getenv("RMQ_PASSWORD")
-	monitorRoutingKey := os.Getenv("ROUTE_1")
-
-	address := fmt.Sprintf("amqp://%s:%s@%s:%s/", username, password, service, port)
-
-	clientset := initKubeconfig()
-
-	nodes := getNodes(clientset)
-
-	conn, err := amqp.Dial(address)
-	failOnError(err, "Failed to connect to RabbitMQ")
+	conn := amqpClient.Connect()
 	defer conn.Close()
 
 	ch, err := conn.Channel()
-	failOnError(err, "Failed to open a channel")
+	e.FailOnError(err, "Failed to open a channel")
 	defer ch.Close()
 
 	err = ch.ExchangeDeclare(
@@ -50,10 +34,12 @@ func main() {
 		false,        // no-wait
 		nil,          // arguments
 	)
-	failOnError(err, "Failed to declare an exchange")
+	e.FailOnError(err, "Failed to declare an exchange")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
+	nodes := k8s.GetNodes()
 
 	body, err := json.Marshal(nodes)
 	if err != nil {
@@ -61,17 +47,19 @@ func main() {
 		return
 	}
 
+	routingKeys := config.GetRoutingKeys()
+
 	for {
 		err = ch.PublishWithContext(ctx,
-			"logs_topic",      // exchange
-			monitorRoutingKey, // routing key for monitor, TO BE REMOVED, ONLY FOR TESTS
-			false,             // mandatory
-			false,             // immediate
+			"logs_topic",        // exchange
+			routingKeys.Monitor, // routing key for monitor
+			false,               // mandatory
+			false,               // immediate
 			amqp.Publishing{
 				ContentType: "text/plain",
 				Body:        []byte(string(body)),
 			})
-		failOnError(err, "Failed to publish a message")
+		e.FailOnError(err, "Failed to publish a message")
 
 		log.Printf(" [x] Sent nodes")
 		time.Sleep(5 * time.Second)

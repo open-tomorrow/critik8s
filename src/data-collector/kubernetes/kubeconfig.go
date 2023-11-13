@@ -1,4 +1,4 @@
-package main
+package kubernetes
 
 import (
 	"flag"
@@ -19,7 +19,7 @@ func isDevEnv() bool {
 	return false
 }
 
-func initKubeconfig() *kubernetes.Clientset {
+func InitKubeconfig() *kubernetes.Clientset {
 
 	var config *rest.Config
 	var err error
