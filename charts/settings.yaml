@@ -9,5 +9,7 @@ settings:
       key2: DZC8yP
       # data-collector <-> rule-evaluator
       key3: kxMjFs
+      # data-collector <-> monitor-backend
+      key4: dpTqMl
   amqpProxy:
     path: amqp-proxy

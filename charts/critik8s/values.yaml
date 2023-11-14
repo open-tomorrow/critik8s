@@ -1,9 +1,6 @@
 kubernetesClusterDomain: cluster.local
 amqpProxy:
   amqpProxy:
-    args:
-    - --upstream
-    - tcp://$(RABBITMQ_CLUSTER_SERVICE_HOST):$(RABBITMQ_CLUSTER_SERVICE_PORT)
     image:
       repository: cloudamqp/websocket-tcp-relay
       tag: latest
@@ -13,6 +10,9 @@ amqpProxy:
     targetPort: 15670
   replicas: 1
   type: ClusterIP
+  externalService:
+    host: critik8s-amqp
+    externalName: "rabbitmq-cluster.rabbitmq.svc.cluster.local"
 dataCollector:
   replicaCount: 1
   image:

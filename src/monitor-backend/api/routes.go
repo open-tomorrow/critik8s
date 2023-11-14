@@ -6,7 +6,11 @@ import (
 
 func Routes(engine *gin.Engine) {
 
-	engine.GET("/ping", Ping)
-	engine.GET("/auth", Auth)
-	engine.GET("/rules", Rules)
+	g := engine.Group("v1")
+
+	g.GET("/ping", Ping)
+	g.GET("/auth", Auth)
+	g.GET("/rules", Rules)
+	g.GET("/nodes", Nodes)
+	g.GET("/pods", Pods)
 }

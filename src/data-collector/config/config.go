@@ -10,14 +10,15 @@ type AmqpConfig struct {
 }
 
 type RoutingKeys struct {
-	Monitor string
+	Monitor        string
+	MonitorBackend string
 }
 
 func GetAmqpConfig() AmqpConfig {
 
 	c := AmqpConfig{
-		Service:  os.Getenv("RABBITMQ_CLUSTER_SERVICE_HOST"),
-		Port:     os.Getenv("RABBITMQ_CLUSTER_SERVICE_PORT"),
+		Service:  os.Getenv("AMQP_HOST"),
+		Port:     os.Getenv("AMQP_PORT"),
 		Username: os.Getenv("AMQP_USERNAME"),
 		Password: os.Getenv("AMQP_PASSWORD"),
 	}
@@ -28,7 +29,8 @@ func GetAmqpConfig() AmqpConfig {
 func GetRoutingKeys() RoutingKeys {
 
 	rk := RoutingKeys{
-		Monitor: os.Getenv("ROUTE_1"),
+		Monitor:        os.Getenv("ROUTE_1"),
+		MonitorBackend: os.Getenv("ROUTE_4"),
 	}
 
 	return rk
