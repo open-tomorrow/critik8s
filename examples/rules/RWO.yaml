@@ -21,51 +21,121 @@
 # - {{ path }}  denotes an absolute path
 # - {{ .path }} denotes a relative path when there is an opened context
 #
-# - [[ key ]]
+# - [ mapName[key] ]
 #
-# Use `[[ ... ]]` subscript to specify a key in the temporary storage.
+# Use `[ mapName[key] ]` subscript to specify a key in the map named 'mapName'.
 #
-name: RWO
-ruleSteps:
+#
+# - [ setName[index] ]
+#
+# Use `[ setName[index] ]` subscript to specify an element in the set named 'setName'.
+#
 
-  - name: RWO-Node
+name: RWO
+
+criticEntities:
+  - resource: Node
+    idSet:
+      - id: metadata.name
+        alias: Name
+  - resource: Pod
+    idSet:
+      - id: metadata.namespace
+        alias: Namespace
+      - id: metadata.name
+        alias: Name
+  - resource: PersistentVolumeClaim
+    idSet:
+      - id: metadata.namespace
+        alias: Namespace
+      - id: metadata.name
+        alias: Name
+
+ruleSteps:
+  - name: Node
     resource: Node
     triggerBy:
       frequency: 10s
     conditions:
-      # conditions are all AND evaluated (c1 && c2 && ...)
+      # conditions are "AND" evaluated (c1 && c2 && ...)
       - name: status
         context: status.conditions
-        moveContextSelectIndexWith:
-          # selectors are all AND evaluated (s1 && s2 && ...)
+        selectArrayItemBy:
+          # selectors are "AND" evaluated (s1 && s2 && ...)
           - property: type
             operator: eq
             value: Ready
-            context: '.'
-        matches:
-          # matches are all AND evaluated (m1 && m2 && ...)
-          - property: status
-            operator: ne
-            value: "True"
-            context: '.'
-            collectPropertyIfMatch:
-              - property: "{{ .reason }}"
-                withKey: reason
-              - property: "{{ metadata.name }}"
-                withKey: nodeName
-    actions:
-      - emit: warning
-        message: "{ name }-{ ruleSteps[0].resource }:{{ metadata.name }} reason: [[ reason ]]"
-        strategy:
-          cancelIfResolved: true
-      - evaluateStep: RWO-Pod
 
-  - name: RWO-Pod
+        matchDefinition:
+          # match items are "AND" evaluated (m1 && m2 && ...)
+          matchList:
+            - property: status
+              operator: ne
+              value: "True"
+
+          onMatchMapItems:
+            - map: nodeInfo
+              items:
+                - property: "{{ status.addresses[0].address }}"
+                  withKey: nodeAddress
+    actions:
+      - evaluateStep: Pod
+
+  - name: Pod
     resource: Pod
     triggerBy:
       onDemand:
+    filters:
+      - name: filterByNodeAddress
+        context: status
+        clauses:
+          - property: status
+            operator: eq
+            value: "[nodeInfo[nodeAddress]]"
     conditions:
-      # ...
+      # conditions are "AND" evaluated (c1 && c2 && ...)
+      - name: PVC
+        context: spec.volumes
+        selectArrayItemBy:
+          # selectors are all AND evaluated (s1 && s2 && ...)
+          - property: persistentVolumeClaim
+            operator: exists
+
+        matchDefinition:
+          matchList:
+            all: true
+          onMatchCollectItems:
+            - set: pvcSet
+              items:
+                - property: "{{ .persistentVolumeClaim.claimName }}"
     actions:
-      - emit: critic
-        message: "..."
+      - evaluateStep: PVC
+
+  - name: PVC
+    resource: PersistentVolumeClaim
+    triggerBy:
+      onDemand:
+    filters:
+      - name: filterBySet
+        context: metadata
+        clauses:
+          - property: name
+            operator: in
+            set: pvcSet
+    conditions:
+      # conditions are "AND" evaluated (c1 && c2 && ...)
+      - name: RWO
+        context: spec
+
+        matchDefinition:
+          # match items are "AND" evaluated (m1 && m2 && ...)
+          matchList:
+            - property: accessModes[0]
+              operator: eq
+              value: ReadWriteOnce
+
+    actions:
+      - emit:
+        - critic: Node
+        - critic: Pod
+        - critic: PersistentVolumeClaim
